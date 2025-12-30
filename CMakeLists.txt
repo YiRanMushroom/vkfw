@@ -36,6 +36,8 @@ option(VKFW_NO_SPACESHIP_OPERATOR "Disable spaceship comparison" OFF)
 option(VKFW_NO_STRING_VIEW "Disable usage of std::string_view" OFF)
 option(VKFW_NO_SPAN "Disable usage of std::span" OFF)
 
+option(VKFW_NO_VULKAN_SUPPORT "Disable Vulkan support entirely" OFF)
+
 set(VKFW_SOURCE_DIR ${PROJECT_SOURCE_DIR})
 set(VKFW_SOURCE_ROOT ${VKFW_SOURCE_DIR}/include)
 set(VKFW_EXAMPLE_ROOT ${VKFW_SOURCE_DIR}/example)
@@ -74,6 +76,12 @@ function(add_definitions OPTION_NAME)
     endif()
 endfunction()
 
+# if Vulkan support is disabled, override related options
+if(VKFW_NO_VULKAN_SUPPORT)
+    set(VKFW_NO_INCLUDE_VULKAN ON)
+    set(VKFW_NO_INCLUDE_VULKAN_HPP ON)
+endif()
+
 # Set options. See README.md for the full list.
 add_definitions(VKFW_DISABLE_ENHANCED_MODE)
 add_definitions(VKFW_NO_EXCEPTIONS)
@@ -89,6 +97,7 @@ add_definitions(VKFW_NO_STRUCT_CONSTRUCTORS)
 add_definitions(VKFW_NO_SPACESHIP_OPERATOR)
 add_definitions(VKFW_NO_STRING_VIEW)
 add_definitions(VKFW_NO_SPAN)
+add_definitions(VKFW_NO_VULKAN_SUPPORT)
 
 if(VKFW_BUILD_CXX_MODULE)
     add_subdirectory(CppModule)

@@ -3073,9 +3073,11 @@ namespace VKFW_NAMESPACE {
     return glfwGetProcAddress(procname);
   }
   VKFW_NODISCARD VKFW_INLINE bool vulkanSupported() { return glfwVulkanSupported(); }
+#if !defined(VKFW_NO_VULKAN_SUPPORT)
   VKFW_INLINE void initVulkanLoader(PFN_vkGetInstanceProcAddr loader) {
     return glfwInitVulkanLoader(loader);
   }
+#endif
 
 #ifdef VKFW_HAS_SPAN
   VKFW_NODISCARD VKFW_INLINE std::span<char const *> getRequiredInstanceExtensions() {
@@ -3087,11 +3089,13 @@ namespace VKFW_NAMESPACE {
   VKFW_NODISCARD VKFW_INLINE char const **getRequiredInstanceExtensions(uint32_t *count) {
     return glfwGetRequiredInstanceExtensions(count);
   }
+#if !defined(VKFW_NO_VULKAN_SUPPORT)
 #ifdef VKFW_HAS_STRING_VIEW
   VKFW_NODISCARD VKFW_INLINE GLFWvkproc getInstanceProcAddress(VkInstance instance,
                                                                std::string_view procname) {
     return glfwGetInstanceProcAddress(instance, procname.data());
   }
+#endif
 #endif
 #if !defined(VKFW_NO_INCLUDE_VULKAN)
   VKFW_NODISCARD VKFW_INLINE GLFWvkproc getInstanceProcAddress(VkInstance instance,
@@ -3150,7 +3154,7 @@ namespace VKFW_NAMESPACE {
     return vk::UniqueSurfaceKHR(output, deleter);
   }
     #endif
-  #else
+  #elseif !defined(VKFW_NO_VULKAN_SUPPORT)
   VKFW_NODISCARD VKFW_INLINE VkSurfaceKHR
   createWindowSurface(VkInstance const &instance, Window const &window,
                       VkAllocationCallbacks const *allocator = nullptr) {
